@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Reportes de Ventas - Aura Store">
+    <meta name="theme-color" content="#8b5cf6">
+    <title>Reportes - Aura Store</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/ventas.css">
+    <link rel="stylesheet" href="css/mobile-optimizations.css">
+</head>
+
+<body>
+
+    <!-- Pantalla de Login -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>✨ Aura Store</h1>
+                <p>Acceso a Reportes de Ventas</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username" class="label">Usuario</label>
+                    <input type="text" id="username" class="input" placeholder="Ingresa tu usuario" required
+                        autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="label">Contraseña</label>
+                    <input type="password" id="password" class="input" placeholder="Ingresa tu contraseña" required
+                        autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    🔐 Entrar
+                </button>
+                <a href="index.html" class="btn btn-secondary btn-block"
+                    style="text-decoration: none; text-align: center;">
+                    ← Volver al POS
+                </a>
+            </form>
+            <div id="login-error" class="login-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Pantalla Principal (oculta hasta login) -->
+    <div id="main-screen" class="main-screen" style="display: none;">
+
+        <!-- Header -->
+        <header class="ventas-header">
+            <div>
+                <h1>📊 Reportes de Ventas</h1>
+                <p>Análisis y detalle de ventas diarias</p>
+            </div>
+            <div class="header-actions">
+                <a href="index.html" class="btn btn-secondary">← Volver al POS</a>
+                <button id="btn-logout" class="btn btn-danger">🚪 Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="ventas-container">
+
+            <!-- Filtros -->
+            <section class="filtros-section">
+                <h2>📅 Filtrar por Fecha</h2>
+                <div class="filtros-grid">
+                    <div class="form-group">
+                        <label for="fecha-desde" class="label">Desde</label>
+                        <input type="date" id="fecha-desde" class="input">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-hasta" class="label">Hasta</label>
+                        <input type="date" id="fecha-hasta" class="input">
+                    </div>
+                    <button id="btn-filtrar" class="btn btn-primary">Filtrar</button>
+                    <button id="btn-limpiar-filtros" class="btn btn-secondary">Limpiar</button>
+                </div>
+            </section>
+
+            <!-- Resumen General -->
+            <section class="resumen-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <p class="stat-label">Total del Período</p>
+                            <p id="total-periodo" class="stat-value">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🛒</div>
+                        <div class="stat-content">
+                            <p class="stat-label">Total de Ventas</p>
+                            <p id="total-ventas" class="stat-value">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-content">
+                            <p class="stat-label">Promedio por Venta</p>
+                            <p id="promedio-venta" class="stat-value">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ventas por Día -->
+            <section class="ventas-list-section">
+                <h2>📋 Ventas por Día</h2>
+                <div id="ventas-por-dia-container">
+                    <div class="loading-container">
+                        <div class="spinner"></div>
+                        <p>Cargando ventas...</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/ventas.js"></script>
+
+</body>
+
+</html>

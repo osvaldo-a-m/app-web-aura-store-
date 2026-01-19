@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Sistema POS para Aura Store - Gestión de Ventas e Inventario">
+  <meta name="theme-color" content="#8b5cf6">
+  <title>POS Admin - Aura Store</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/pos.css">
+  <link rel="stylesheet" href="css/pos-modals.css">
+  <link rel="stylesheet" href="css/mobile-optimizations.css">
+</head>
+
+<body>
+
+  <div class="pos-layout">
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
+    <header class="pos-header">
+      <div>
+        <h1>✨ Aura Store - Admin</h1>
+        <p style="color: var(--color-text-muted); margin-top: var(--space-2);">Sistema de Gestión</p>
+      </div>
+
+      <!-- Navegación por Pestañas -->
+      <nav class="tab-navigation">
+        <button class="tab-btn active" data-view="ventas">
+          💰 Ventas
+        </button>
+        <button class="tab-btn" data-view="inventario">
+          📦 Inventario
+        </button>
+      </nav>
+
+      <div style="display: flex; align-items: center; gap: var(--space-4);">
+        <a href="ventas.html" class="btn btn-primary" style="text-decoration: none;">
+          📊 Reportes
+        </a>
+        <div class="connection-status" id="connection-status">
+          <span class="status-dot"></span>
+          <span id="status-text">Conectando...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==========================================
+         ÁREA PRINCIPAL - VISTAS
+         ========================================== -->
+    <main class="pos-main">
+
+      <!-- ==========================================
+           VISTA: VENTAS
+           ========================================== -->
+      <div id="vista-ventas" class="vista-container active">
+
+        <div class="ventas-layout">
+
+          <!-- COLUMNA IZQUIERDA: PEDIDOS PENDIENTES -->
+          <aside class="pedidos-sidebar">
+            <section class="pedidos-section">
+              <h2 class="section-title">📋 Pedidos Pendientes</h2>
+
+              <div class="pedidos-container" id="pedidos-container">
+                <div class="pedidos-empty">
+                  <p style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">📭</p>
+                  <p>No hay pedidos pendientes</p>
+                  <p style="font-size: var(--text-sm); margin-top:var(--space-2); opacity: 0.7;">
+                    Los pedidos del catálogo público aparecerán aquí
+                  </p>
+                </div>
+              </div>
+            </section>
+          </aside>
+
+          <!-- COLUMNA DERECHA: NUEVA VENTA -->
+          <main class="ventas-main">
+            <section class="ventas-section">
+              <h2 class="section-title">💰 Nueva Venta</h2>
+
+              <div class="buscar-producto-input">
+                <input type="text" id="buscar-producto" class="input"
+                  placeholder="Buscar producto por nombre o escanear código de barras..." autocomplete="off">
+                <div id="producto-suggestions" class="producto-suggestions hidden"></div>
+              </div>
+
+              <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+                💡 <strong>Tip:</strong> Escanea un código de barras o escribe el nombre del producto para agregarlo al
+                carrito.
+              </p>
+            </section>
+          </main>
+
+        </div>
+
+      </div>
+
+      <!-- ==========================================
+           VISTA: INVENTARIO
+           ========================================== -->
+      <div id="vista-inventario" class="vista-container">
+
+        <!-- SECCIÓN DE INVENTARIO -->
+        <section class="inventario-section">
+          <h2 class="section-title">📦 Gestión de Inventario</h2>
+
+          <!-- Formulario de Alta de Productos -->
+          <form id="form-producto">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="input-nombre" class="label">Nombre del Producto</label>
+                <input type="text" id="input-nombre" class="input" placeholder="Ej: Coca Cola 600ml" required>
+              </div>
+
+              <div class="form-group">
+                <label for="input-codigo" class="label">Código de Barras</label>
+                <input type="text" id="input-codigo" class="input" placeholder="Ej: 7501234567890" required>
+              </div>
+
+              <div class="form-group">
+                <label for="input-precio" class="label">Precio (MXN)</label>
+                <input type="number" id="input-precio" class="input" placeholder="0.00" step="0.01" min="0.01" required>
+              </div>
+
+              <div class="form-group">
+                <label for="input-stock" class="label">Stock Inicial</label>
+                <input type="number" id="input-stock" class="input" placeholder="0" min="0" required>
+              </div>
+            </div>
+
+            <!-- Image Upload Section -->
+            <div class="form-group">
+              <label for="input-imagen" class="label">Imagen del Producto (Opcional)</label>
+              <input type="file" id="input-imagen" class="input-file"
+                accept="image/jpeg,image/jpg,image/png,image/webp,image/gif">
+              <div id="imagen-preview-container" class="imagen-preview-container" style="display: none;">
+                <img id="imagen-preview" class="imagen-preview" alt="Vista previa">
+                <button type="button" id="btn-remove-imagen" class="btn-remove-imagen">✕ Quitar</button>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-2);">
+                Formatos: JPG, PNG, WebP, GIF • Tamaño máx: 2MB
+              </p>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              ➕ Agregar Producto
+            </button>
+          </form>
+
+          <!-- Tabla de Productos -->
+          <div class="table-container">
+            <table class="productos-table">
+              <thead>
+                <tr>
+                  <th>Imagen</th>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Precio</th>
+                  <th>Stock</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-productos">
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: var(--space-8); color: var(--color-text-muted);">
+                    <div class="spinner" style="margin: 0 auto;"></div>
+                    <p style="margin-top: var(--space-4);">Cargando productos...</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+    <!-- ==========================================
+         CARRITO (SIDEBAR)
+         ========================================== -->
+    <aside class="pos-cart">
+      <div class="cart-header">
+        <h2>🛒 Carrito de Venta</h2>
+      </div>
+
+      <div class="cart-items" id="cart-items">
+        <div class="cart-empty">
+          <p style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">🛍️</p>
+          <p>No hay productos en el carrito</p>
+          <p style="font-size: var(--text-xs); margin-top: var(--space-2);">Escanea o busca productos para agregar</p>
+        </div>
+      </div>
+
+      <div class="cart-total">
+        <p class="cart-total-label">Total a Pagar</p>
+        <p class="cart-total-amount" id="cart-total">$0.00</p>
+      </div>
+
+      <div class="cart-actions">
+        <button id="btn-finalizar-venta" class="btn btn-success" disabled>
+          ✅ Finalizar Venta
+        </button>
+        <button id="btn-limpiar-carrito" class="btn btn-secondary" disabled>
+          🗑️ Limpiar Carrito
+        </button>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ==========================================
+       SCRIPTS
+       ======================================== -->
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Configuración y Módulos -->
+  <script src="config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/barcode-scanner.js"></script>
+  <script src="js/pedidos.js"></script>
+  <script src="js/pos.js"></script>
+
+  <!-- Container para notificaciones toast -->
+  <div id="toast-container" style="position: fixed; top: var(--space-6); right: var(--space-6); z-index: 9999;"></div>
+
+</body>
+
+</html>
